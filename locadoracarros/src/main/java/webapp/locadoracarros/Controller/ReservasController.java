@@ -1,6 +1,8 @@
 package webapp.locadoracarros.Controller;
 
-import java.sql.Date;
+import java.util.Date;
+import java.util.List;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,8 +36,8 @@ public class ReservasController {
     public String cadastrarReserva(@RequestParam("cliente") Long clienteId,
             @RequestParam("carro") Long carroId,
             @RequestParam("localRetirada") String localRetirada,
-            @RequestParam("dataRetirada") Date dataRetirada,
-            @RequestParam("dataDevolu") Date dataDevolu) {
+            @RequestParam("dataRetirada") @DateTimeFormat(pattern = "yyyy-MM-dd") Date dataRetirada,
+            @RequestParam("dataDevolu") @DateTimeFormat(pattern = "yyyy-MM-dd") Date dataDevolu) {
         Clientes cliente = clientesRepository.findById(clienteId)
                 .orElseThrow(() -> new IllegalArgumentException("Cliente inválido: " + clienteId));
         Carros carro = carrosRepository.findById(carroId)
@@ -46,10 +48,10 @@ public class ReservasController {
         reserva.setLocalRetirada(localRetirada);
         reserva.setDataRetirada(dataRetirada);
         reserva.setDataDevolu(dataDevolu);
-
+        carro.setDisponivel(false);
         reservasRepository.save(reserva);
 
-        return "internas/carros";
+        return "index";
     }
 
     @GetMapping("/edita-reserva/{idReserva}")
@@ -72,7 +74,65 @@ public class ReservasController {
 
     @GetMapping("/deletar-reserva/{idReserva}")
     public String deletarReserva(@PathVariable Long idReserva) {
+        Reservas reserva = reservasRepository.findById(idReserva)
+                .orElseThrow(() -> new IllegalArgumentException("Reserva não encontrada com ID: " + idReserva));
+        Carros carro = reserva.getCarro();
+        carro.setDisponivel(true);
+        carrosRepository.save(carro);
         reservasRepository.deleteById(idReserva);
+
         return "internas/lista-reservas";
     }
+
+    @GetMapping("/pesquisar-reservas")
+    public String pesquisarReservasPorData(
+            @RequestParam("dataPesquisa") @DateTimeFormat(pattern = "yyyy-MM-dd") Date dataPesquisa, Model model) {
+
+        List<Reservas> reservas = reservasRepository.findByDataRetirada(dataPesquisa);
+
+        model.addAttribute("reservas", reservas);
+
+        return "internas/lista-reservas-data";
+    }
+
+    @GetMapping("/lista-reservas-data")
+    public String listaReservasData() {
+        return "internas/lista-reservas-data";
+    }
+
+    @GetMapping("/lista-carros-cliente")
+    public String listaCarrosCliente(Model model) {
+        model.addAttribute("reservas", reservasRepository.findAll());
+        return "internas/lista-carros-cliente";
+    }
+
+    @GetMapping("/lista-reservas-data-cliente")
+    public String listaReservasDataCliente(Model model) {
+        List<Clientes> clientes = (List<Clientes>) clientesRepository.findAll();
+        model.addAttribute("clientes", clientes);
+        return "internas/lista-reservas-data-cliente";
+    }
+
+    @GetMapping("/pesquisar-reservas-data-cliente")
+    public String pesquisaReservasDataCliente(
+            @RequestParam("clienteId") Long clienteId,
+            @RequestParam("dataRetirada") @DateTimeFormat(pattern = "yyyy-MM-dd") Date dataRetirada,
+            @RequestParam("dataDevolu") @DateTimeFormat(pattern = "yyyy-MM-dd") Date dataDevolu,
+            Model model) {
+
+        List<Clientes> clientes = (List<Clientes>) clientesRepository.findAll();
+        model.addAttribute("clientes", clientes);
+
+        Clientes cliente = clientesRepository.findById(clienteId)
+                .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado com ID: " + clienteId));
+
+        List<Reservas> reservas = reservasRepository.findByClienteAndDataRetiradaBetween(cliente, dataRetirada,
+                dataDevolu);
+
+        model.addAttribute("cliente", cliente);
+        model.addAttribute("reservas", reservas);
+
+        return "internas/lista-reservas-data-cliente";
+    }
+
 }

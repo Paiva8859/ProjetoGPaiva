@@ -1,8 +1,12 @@
 package webapp.locadoracarros.Repository;
 
+import java.util.List;
+
 import org.springframework.data.repository.CrudRepository;
 import webapp.locadoracarros.Model.Carros;
 
 public interface CarrosRepository extends CrudRepository<Carros, Long> {
     Iterable<Carros> findAll();
+
+    List<Carros> findByDisponivelTrue();
 }

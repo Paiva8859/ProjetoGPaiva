@@ -1,20 +1,21 @@
 <!DOCTYPE html>
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reserva de Carros</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
             background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
             display: flex;
-            justify-content: center;
             align-items: center;
-            height: 100vh;
+            flex-direction: column;
         }
+
         .container {
             max-width: 500px;
             width: 100%;
@@ -23,11 +24,14 @@
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             text-align: center;
+            margin-top: 12vh;
         }
+
         h1 {
             color: black;
             margin-bottom: 20px;
         }
+
         label {
             display: block;
             margin-top: 10px;
@@ -35,7 +39,9 @@
             color: #495057;
             text-align: left;
         }
-        input, select {
+
+        input,
+        select {
             width: calc(100% - 20px);
             padding: 10px;
             margin-top: 5px;
@@ -47,6 +53,7 @@
             margin-left: auto;
             margin-right: auto;
         }
+
         button {
             width: 100%;
             padding: 10px;
@@ -57,19 +64,71 @@
             font-size: 16px;
             cursor: pointer;
         }
+
         button:hover {
             background-color: #0056b3;
         }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            width: 100%;
+        }
+
+        h1 {
+            margin: 0;
+            color: #fff;
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        nav ul li {
+            display: inline;
+            margin: 0 10px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        nav ul li a:hover {
+            background-color: #555;
+        }
     </style>
 </head>
+
 <body>
+    <header>
+        <h1>Locadora GPaiva</h1>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/reservas">Reservas</a></li>
+                <li><a href="/carros">Carros</a></li>
+                <li><a href="/listas">Listar</a></li>
+                <li><a href="/clientes">Cadastrar Clientes</a></li>
+            </ul>
+        </nav>
+    </header>
     <div class="container">
         <h1>Reserva de Carros</h1>
         <form action="/reservar-carro" method="post">
             <label for="cliente">Cliente:</label>
             <select id="cliente" name="cliente" required>
                 <option value="" disabled selected>Selecione um cliente</option>
-                <option th:each="cliente : ${clientes}" th:value="${cliente.idCliente}" th:text="${cliente.nome}"></option>
+                <option th:each="cliente : ${clientes}" th:value="${cliente.idCliente}" th:text="${cliente.nome}">
+                </option>
             </select>
             <label for="carro">Carro:</label>
             <select id="carro" name="carro" required>
@@ -86,4 +145,5 @@
         </form>
     </div>
 </body>
+
 </html>

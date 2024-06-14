@@ -1,5 +1,8 @@
 package webapp.locadoracarros.Controller;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.stereotype.Controller;
 import webapp.locadoracarros.Model.Clientes;
 import webapp.locadoracarros.Repository.ClientesRepository;
@@ -60,4 +63,23 @@ public class ClientesController {
         clientesRepository.deleteById(idCliente);
         return "internas/lista-clientes";
     }
+
+    // @GetMapping("/clientes-frequentes")
+    // public String clientesFrequentes(Model model) {
+    //     List<Clientes> clientesComMaisDeUmAluguel = clientesRepository.findClientesComMaisDeUmAluguel();
+    //     List<Clientes> clientesComMaisAlugueis = clientesRepository.findClienteComMaisAlugueis();
+
+    //     model.addAttribute("clientesComMaisDeUmAluguel", clientesComMaisDeUmAluguel);
+
+    //     if (!clientesComMaisAlugueis.isEmpty()) {
+    //         Clientes clienteComMaisAlugueis = clientesComMaisAlugueis.get(0);
+    //         model.addAttribute("clienteComMaisAlugueis", clienteComMaisAlugueis);
+    //         model.addAttribute("clienteMaisAlugouCount", clientesRepository.countByCliente(clienteComMaisAlugueis));
+    //     } else {
+    //         model.addAttribute("clienteComMaisAlugueis", null);
+    //         model.addAttribute("clienteMaisAlugouCount", 0);
+    //     }
+
+    //     return "internas/clientes-frequentes";
+    // }
 }

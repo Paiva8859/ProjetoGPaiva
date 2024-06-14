@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Reservas</title>
-    <link rel="stylesheet" href="/css/liststyle.css">
+    <title>Reservas por Data e Cliente</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
@@ -30,9 +29,14 @@
             margin-bottom: 20px;
         }
 
+        header h1 {
+            color: #fff;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 20px;
         }
 
         thead {
@@ -56,6 +60,7 @@
         tbody td {
             padding: 10px;
             border-bottom: 1px solid #ddd;
+            text-align: center;
         }
 
         a {
@@ -67,20 +72,12 @@
             text-decoration: underline;
         }
 
-        i {
-            margin-right: 5px;
-        }
-
         header {
             background-color: #333;
             color: #fff;
             padding: 20px;
             text-align: center;
-        }
-
-        h1 {
-            margin: 0;
-            color: #fff;
+            margin-bottom: 20px;
         }
 
         nav ul {
@@ -106,6 +103,42 @@
         nav ul li a:hover {
             background-color: #555;
         }
+
+        /* Custom Styles for Date Search Form */
+        form {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        label {
+            margin-right: 10px;
+        }
+
+        input[type="date"],
+        select {
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        select {
+            width: 200px;
+            /* Ajuste conforme necessário */
+        }
+
+        button[type="submit"] {
+            padding: 10px;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 
@@ -122,40 +155,48 @@
             </ul>
         </nav>
     </header>
+
     <div class="main-content">
-        <h1>Lista de Reservas</h1>
+        <h1>Reservas por Período e Cliente</h1>
+
+        <form action="/pesquisar-reservas-data-cliente" method="get">
+            <label for="dataInicio">Data de Início:</label>
+            <input type="date" id="dataInicio" name="dataRetirada" required>
+
+            <label for="dataFim">Data de Fim:</label>
+            <input type="date" id="dataFim" name="dataDevolu" required>
+
+            <label for="clienteId">Cliente:</label>
+            <select id="clienteId" name="clienteId" required>
+                <option value="" disabled selected>Selecione um cliente</option>
+                <option th:each="cliente : ${clientes}" th:value="${cliente.idCliente}" th:text="${cliente.nome}">
+                </option>
+            </select>
+
+            <button type="submit">Pesquisar</button>
+        </form>
+
+
         <table>
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Nome</th>
-                    <th>Modelo do Carro</th>
-                    <th>Telefone</th>
-                    <th>Email</th>
+                    <th>ID Reserva</th>
+                    <th>Cliente</th>
+                    <th>Carro</th>
                     <th>Local de Retirada</th>
                     <th>Data de Retirada</th>
                     <th>Data de Devolução</th>
-                    <th>Ações</th>
                 </tr>
             </thead>
             <tbody>
+                <!-- Loop sobre as reservas -->
                 <tr th:each="reserva : ${reservas}">
                     <td th:text="${reserva.idReserva}"></td>
                     <td th:text="${reserva.cliente.nome}"></td>
                     <td th:text="${reserva.carro.modelo}"></td>
-                    <td th:text="${reserva.cliente.telefone}"></td>
-                    <td th:text="${reserva.cliente.email}"></td>
                     <td th:text="${reserva.localRetirada}"></td>
                     <td th:text="${#dates.format(reserva.dataRetirada, 'dd/MM/yyyy')}"></td>
                     <td th:text="${#dates.format(reserva.dataDevolu, 'dd/MM/yyyy')}"></td>
-                    <td>
-                        <a th:href="@{/edita-reserva/{idReserva}(idReserva=${reserva.idReserva})}" title="Editar">
-                            <i class="fas fa-pencil-alt"></i>
-                        </a>
-                        <a th:href="@{/deletar-reserva/{idReserva}(idReserva=${reserva.idReserva})}" title="Excluir">
-                            <i class="fas fa-times"></i>
-                        </a>
-                    </td>
                 </tr>
             </tbody>
         </table>

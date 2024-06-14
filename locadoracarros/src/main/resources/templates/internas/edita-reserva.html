@@ -1,17 +1,20 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Reserva</title>
     <link rel="stylesheet" href="/css/liststyle.css">
 </head>
+
 <body>
     <div class="main-content">
         <h1>Editar Reserva</h1>
-        <form th:object="${reserva}" method="post" th:action="@{/editar-reserva/{idReserva}(idReserva=${reserva.idReserva})}">
+        <form th:object="${reserva}" method="post"
+            th:action="@{/editar-reserva/{idReserva}(idReserva=${reserva.idReserva})}">
             <input type="hidden" id="idReserva" name="idReserva" th:value="${reserva.idReserva}">
-            
+
             <label for="localRetirada">Local de Retirada:</label>
             <input type="text" id="localRetirada" th:field="*{localRetirada}"><br><br>
             <label for="dataRetirada">Data de Retirada:</label>
@@ -22,4 +25,5 @@
         </form>
     </div>
 </body>
+
 </html>

@@ -16,6 +16,7 @@ public class Carros implements Serializable {
     private String placa;
     private int ano;
     private String cor;
+    private boolean disponivel = true;
 
     // Getters and Setters
     public long getIdCarro() {
@@ -56,6 +57,14 @@ public class Carros implements Serializable {
 
     public void setCor(String cor) {
         this.cor = cor;
+    }
+
+    public boolean isDisponivel() {
+        return disponivel;
+    }
+
+    public void setDisponivel(boolean disponivel) {
+        this.disponivel = disponivel;
     }
 }
     

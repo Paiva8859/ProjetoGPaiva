@@ -63,10 +63,58 @@
         input[type="submit"]:hover {
             background-color: #0056b3;
         }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0;
+            color: #fff;
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        nav ul li {
+            display: inline;
+            margin: 0 10px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        nav ul li a:hover {
+            background-color: #555;
+        }
     </style>
 </head>
 
 <body>
+    <header>
+        <h1>Locadora GPaiva</h1>
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/reservas">Reservas</a></li>
+            <li><a href="/carros">Carros</a></li>
+            <li><a href="/listas">Listar</a></li>
+            <li><a href="/clientes">Cadastrar Clientes</a></li>
+        </ul>
+    </nav>
+    </header>
     <div class="main-content">
         <h1>Editar Cliente</h1>
         <form th:object="${cliente}" method="post">

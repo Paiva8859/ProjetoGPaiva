@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LocadoraGPaiva</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        nav ul li {
+            display: inline;
+            margin: 0 10px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        nav ul li a:hover {
+            background-color: #555;
+        }
+
+        /* New styles for the buttons section */
+        .button-container {
+            text-align: center;
+            margin: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .button-container a {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px 20px;
+            background-color: #333;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .button-container a:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Locadora GPaiva</h1>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/reservas">Reservas</a></li>
+                <li><a href="/carros">Carros</a></li>
+                <li><a href="/listas">Listar</a></li>
+                <li><a href="/clientes">Cadastrar Clientes</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="button-container">
+        <a href="/lista-carros-disponiveis">Lista de Carros Disponíveis</a>
+        <a href="/lista-reservas">Lista de Reservas</a>
+        <a href="/lista-reservas-data">Lista de Reservas por Data</a>
+        <a href="/lista-carros-cliente">Lista de Carros por Cliente</a>
+        <a href="/lista-reservas-data-cliente">Lista de Carros por Cliente e Data</a>
+        <a href="/clientes-frequentes">Lista de Clientes Frequêntes</a>
+    </section>
+</body>
+
+</html>

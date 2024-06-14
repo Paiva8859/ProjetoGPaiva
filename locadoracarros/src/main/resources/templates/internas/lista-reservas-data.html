@@ -115,7 +115,37 @@
             </ul>
         </nav>
     </header>
-    
+    <div class="main-content">
+        <h1>Reservas para a Data Pesquisada</h1>
+        <form action="/pesquisar-reservas" method="get">
+            <label for="dataPesquisa">Pesquisar por Data:</label>
+            <input type="date" id="dataPesquisa" name="dataPesquisa" required>
+            <button type="submit">Pesquisar</button>
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID Reserva</th>
+                    <th>Cliente</th>
+                    <th>Carro</th>
+                    <th>Local de Retirada</th>
+                    <th>Data de Retirada</th>
+                    <th>Data de Devolução</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="reserva : ${reservas}">
+                    <td th:text="${reserva.idReserva}"></td>
+                    <td th:text="${reserva.cliente.nome}"></td>
+                    <td th:text="${reserva.carro.modelo}"></td>
+                    <td th:text="${reserva.localRetirada}"></td>
+                    <td th:text="${#dates.format(reserva.dataRetirada, 'dd/MM/yyyy')}"></td>
+                    <td th:text="${#dates.format(reserva.dataDevolu, 'dd/MM/yyyy')}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"

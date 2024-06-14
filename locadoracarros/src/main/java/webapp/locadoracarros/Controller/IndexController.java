@@ -13,17 +13,16 @@ import webapp.locadoracarros.Repository.ClientesRepository;
 import webapp.locadoracarros.Repository.ReservasRepository;
 import org.springframework.web.bind.annotation.GetMapping;
 
-
 @Controller
 public class IndexController {
-    
+
     private final ReservasRepository reservasRepository;
     private final ClientesRepository clientesRepository;
     private final CarrosRepository carrosRepository;
 
-    public IndexController(ReservasRepository reservasRepository, 
-                           ClientesRepository clientesRepository,
-                           CarrosRepository carrosRepository) {
+    public IndexController(ReservasRepository reservasRepository,
+            ClientesRepository clientesRepository,
+            CarrosRepository carrosRepository) {
         this.reservasRepository = reservasRepository;
         this.clientesRepository = clientesRepository;
         this.carrosRepository = carrosRepository;
@@ -32,6 +31,11 @@ public class IndexController {
     @GetMapping("/")
     public String index() {
         return "index";
+    }
+
+    @GetMapping("/listas")
+    public String listas() {
+        return "internas/listas";
     }
 
     @GetMapping("/lista-reservas")
@@ -53,10 +57,9 @@ public class IndexController {
     @GetMapping("/reservas")
     public String showReservaForm(Model model) {
         List<Clientes> clientes = (List<Clientes>) clientesRepository.findAll();
-        List<Carros> carros = (List<Carros>) carrosRepository.findAll();
-
+        List<Carros> carrosDisponiveis = carrosRepository.findByDisponivelTrue();
         model.addAttribute("clientes", clientes);
-        model.addAttribute("carros", carros);
+        model.addAttribute("carros", carrosDisponiveis);
         model.addAttribute("reserva", new Reservas());
 
         return "internas/reservas";
@@ -70,5 +73,4 @@ public class IndexController {
 
         return "internas/lista-clientes";
     }
-    
 }
