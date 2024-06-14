@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Carros</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 600px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #007bff;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Cadastro de Carros</h1>
+        <form action="/cadastrar-carro" method="post">
+            <div class="form-group">
+                <label for="modelo">Modelo</label>
+                <input type="text" class="form-control" id="modelo" name="modelo" required>
+            </div>
+            <div class="form-group">
+                <label for="placa">Placa</label>
+                <input type="text" class="form-control" id="placa" name="placa" required>
+            </div>
+            <div class="form-group">
+                <label for="ano">Ano</label>
+                <input type="number" class="form-control" id="ano" name="ano" required>
+            </div>
+            <div class="form-group">
+                <label for="cor">Cor</label>
+                <input type="text" class="form-control" id="cor" name="cor" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Cadastrar</button>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

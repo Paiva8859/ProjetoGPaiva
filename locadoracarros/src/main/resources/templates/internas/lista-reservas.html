@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Reservas</title>
+    <link rel="stylesheet" href="/css/liststyle.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .main-content {
+            background-color: #ffffff;
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        thead th {
+            padding: 10px;
+            text-align: left;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tbody tr:hover {
+            background-color: #ddd;
+        }
+
+        tbody td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        i {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main-content">
+        <h1>Lista de Reservas</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Modelo do Carro</th>
+                    <th>Telefone</th>
+                    <th>Email</th>
+                    <th>Local de Retirada</th>
+                    <th>Data de Retirada</th>
+                    <th>Data de Devolução</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="reserva : ${reservas}">
+                    <td th:text="${reserva.idReserva}"></td>
+                    <td th:text="${reserva.cliente.nome}"></td>
+                    <td th:text="${reserva.carro.modelo}"></td>
+                    <td th:text="${reserva.cliente.telefone}"></td>
+                    <td th:text="${reserva.cliente.email}"></td>
+                    <td th:text="${reserva.localRetirada}"></td>
+                    <td th:text="${#dates.format(reserva.dataRetirada, 'dd/MM/yyyy')}"></td>
+                    <td th:text="${#dates.format(reserva.dataDevolu, 'dd/MM/yyyy')}"></td>
+                    <td>
+                        <a th:href="@{/edita-reserva/{idReserva}(idReserva=${reserva.idReserva})}" title="Editar">
+                            <i class="fas fa-pencil-alt"></i>
+                        </a>
+                        <a th:href="@{/deletar-reserva/{idReserva}(idReserva=${reserva.idReserva})}" title="Excluir">
+                            <i class="fas fa-times"></i>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>
