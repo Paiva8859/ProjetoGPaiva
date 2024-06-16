@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pesquisa de Reservas por Data</title>
+    <title>Média de Dias de Aluguel por Veículo</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
         integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <style>
@@ -24,16 +23,11 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-        h1 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 20px;
-        }
-
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
+            /* Espaço adicional para separação do título */
         }
 
         thead {
@@ -57,7 +51,6 @@
         tbody td {
             padding: 10px;
             border-bottom: 1px solid #ddd;
-            text-align: center;
         }
 
         a {
@@ -69,11 +62,23 @@
             text-decoration: underline;
         }
 
+        i {
+            margin-right: 5px;
+        }
+
         header {
             background-color: #333;
             color: #fff;
             padding: 20px;
             text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            color: #fff;
+        }
+        h1{
+            color: #333;
         }
 
         nav ul {
@@ -115,19 +120,23 @@
             </ul>
         </nav>
     </header>
-    
-
-    <h1>Atenção! Manutenção e revisão terceirizada e realizada após a devolução do veículo.</h1>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"
-        integrity="sha384-JnIyOFHVNQczgqnMObH7F1TweFj+YgjbC8a//YVWOQj3nxlJ90YxjTlA/8ZAxYaN"
-        crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
-        integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em"
-        crossorigin="anonymous"></script>
+    <div class="main-content">
+        <h1>Média de Dias de Aluguel por Veículo</h1>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Veículo</th>
+                    <th>Média de Dias de Aluguel</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="media : ${medias}">
+                    <td th:text="${media[0].modelo}"></td>
+                    <td th:text="${#numbers.formatDecimal(media[1], 1, 'COMMA', 2, 'POINT')}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </body>
 
 </html>

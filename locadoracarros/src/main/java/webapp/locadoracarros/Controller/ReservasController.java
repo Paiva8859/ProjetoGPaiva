@@ -180,7 +180,6 @@ public class ReservasController {
     public String receitaData() {
         return "internas/receita-data";
     }
-    
 
     @GetMapping("/calcular-receita")
     @ResponseBody
@@ -213,4 +212,33 @@ public class ReservasController {
 
         return receitaTotal.toString();
     }
+
+    @GetMapping("/media-dias-aluguel")
+    public String mediaDiasAluguel(Model model) {
+        List<Carros> carrosCadastrados = (List<Carros>) carrosRepository.findAll();
+        List<Object[]> medias = new ArrayList<>();
+
+        for (Carros carro : carrosCadastrados) {
+            List<Historico> historicoCarro = historicoRepository.findByCarro(carro);
+
+            if (!historicoCarro.isEmpty()) {
+                long totalDias = 0;
+                for (Historico historico : historicoCarro) {
+                    LocalDate dataRetirada = historico.getDataRetirada().toInstant().atZone(ZoneId.systemDefault())
+                            .toLocalDate();
+                    LocalDate dataDevolu = historico.getDataDevolu().toInstant().atZone(ZoneId.systemDefault())
+                            .toLocalDate();
+                    long diasAluguel = ChronoUnit.DAYS.between(dataRetirada, dataDevolu) + 1;
+                    totalDias += diasAluguel;
+                }
+
+                double media = (double) totalDias / historicoCarro.size();
+                medias.add(new Object[] { carro, media });
+            }
+        }
+
+        model.addAttribute("medias", medias);
+        return "internas/media-dias-aluguel";
+    }
+
 }
