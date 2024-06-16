@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Receita por Data</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+        <style>
+            body {
+                background-color: #f4f4f4;
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+            }
+    
+            .main-content {
+                background-color: #ffffff;
+                max-width: 1200px;
+                margin: 50px auto;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+    
+            h1 {
+                text-align: center;
+                color: #fff;
+                margin-bottom: 20px;
+            }
+    
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+            }
+    
+            thead {
+                background-color: #007bff;
+                color: #fff;
+            }
+    
+            thead th {
+                padding: 10px;
+                text-align: left;
+            }
+    
+            tbody tr:nth-child(even) {
+                background-color: #f2f2f2;
+            }
+    
+            tbody tr:hover {
+                background-color: #ddd;
+            }
+    
+            tbody td {
+                padding: 10px;
+                border-bottom: 1px solid #ddd;
+                text-align: center;
+            }
+    
+            a {
+                color: #007bff;
+                text-decoration: none;
+            }
+    
+            a:hover {
+                text-decoration: underline;
+            }
+    
+            header {
+                background-color: #333;
+                color: #fff;
+                padding: 20px;
+                text-align: center;
+            }
+    
+            nav ul {
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+                text-align: center;
+            }
+    
+            nav ul li {
+                display: inline;
+                margin: 0 10px;
+            }
+    
+            nav ul li a {
+                color: #fff;
+                text-decoration: none;
+                padding: 5px 10px;
+                border-radius: 5px;
+                transition: background-color 0.3s;
+            }
+    
+            nav ul li a:hover {
+                background-color: #555;
+            }
+        </style>
+</head>
+
+<body>
+    <header>
+        <h1>Locadora GPaiva</h1>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/reservas">Reservas</a></li>
+                <li><a href="/carros">Carros</a></li>
+                <li><a href="/listas">Listar</a></li>
+                <li><a href="/clientes">Cadastrar Clientes</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="container">
+
+        <div class="main-content">
+            <h1>Calculadora de Receita por Data</h1>
+            <form id="calculadoraForm" onsubmit="return calcularReceita()">
+                <div class="form-group">
+                    <label for="dataInicial">Data Inicial:</label>
+                    <input type="date" class="form-control" id="dataInicial" name="dataInicial" required>
+                </div>
+                <div class="form-group">
+                    <label for="dataFinal">Data Final:</label>
+                    <input type="date" class="form-control" id="dataFinal" name="dataFinal" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Calcular Receita</button>
+            </form>
+
+            <div id="resultado" class="resultado" style="display: none;">
+                <h3>Receita Total:</h3>
+                <p id="valorReceita"></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"
+        integrity="sha384-JnIyOFHVNQczgqnMObH7F1TweFj+YgjbC8a//YVWOQj3nxlJ90YxjTlA/8ZAxYaN"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em"
+        crossorigin="anonymous"></script>
+    <script>
+        function calcularReceita() {
+            event.preventDefault(); // Evita o envio do formulário
+
+            var dataInicial = document.getElementById('dataInicial').value;
+            var dataFinal = document.getElementById('dataFinal').value;
+
+            // Verifica se as datas estão preenchidas
+            if (!dataInicial || !dataFinal) {
+                alert('Por favor, preencha ambas as datas.');
+                return false;
+            }
+
+            // Faz a requisição AJAX para calcular a receita
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/calcular-receita?dataInicial=' + dataInicial + '&dataFinal=' + dataFinal, true);
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    var receitaTotal = xhr.responseText;
+                    exibirResultado(receitaTotal);
+                } else {
+                    alert('Erro ao calcular a receita.');
+                }
+            };
+            xhr.send();
+
+            return false;
+        }
+
+        function exibirResultado(receitaTotal) {
+            var resultadoDiv = document.getElementById('resultado');
+            var valorReceita = document.getElementById('valorReceita');
+            valorReceita.textContent = receitaTotal;
+            resultadoDiv.style.display = 'block';
+        }
+    </script>
+</body>
+
+</html>

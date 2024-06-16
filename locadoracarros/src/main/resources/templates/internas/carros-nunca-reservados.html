@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pesquisa de Reservas por Data</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
-        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <title>Carros Nunca Reservados</title>
+    <link rel="stylesheet" href="/css/liststyle.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
             background-color: #f4f4f4;
@@ -26,14 +26,13 @@
 
         h1 {
             text-align: center;
-            color: #fff;
+            color: #333;
             margin-bottom: 20px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
         }
 
         thead {
@@ -57,7 +56,6 @@
         tbody td {
             padding: 10px;
             border-bottom: 1px solid #ddd;
-            text-align: center;
         }
 
         a {
@@ -69,11 +67,20 @@
             text-decoration: underline;
         }
 
+        i {
+            margin-right: 5px;
+        }
+
         header {
             background-color: #333;
             color: #fff;
             padding: 20px;
             text-align: center;
+        }
+
+        h1 {
+            margin: 0;
+            color: #fff;
         }
 
         nav ul {
@@ -116,46 +123,31 @@
         </nav>
     </header>
     <div class="main-content">
-        <h1>Reservas para a Data Pesquisada</h1>
-        <form action="/pesquisar-reservas" method="get">
-            <label for="dataPesquisa">Pesquisar por Data:</label>
-            <input type="date" id="dataPesquisa" name="dataPesquisa" required>
-            <button type="submit">Pesquisar</button>
-        </form>
-
+        <h1>Carros Nunca Reservados</h1>
         <table>
             <thead>
                 <tr>
-                    <th>ID Reserva</th>
-                    <th>Cliente</th>
-                    <th>Carro</th>
-                    <th>Local de Retirada</th>
-                    <th>Data de Retirada</th>
-                    <th>Data de Devolução</th>
+                    <th>ID</th>
+                    <th>Modelo</th>
+                    <th>Placa</th>
+                    <th>Ano</th>
+                    <th>Cor</th>
+                    <th>Disponível</th>
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="reserva : ${reservas}">
-                    <td th:text="${reserva.idReserva}"></td>
-                    <td th:text="${reserva.cliente.nome}"></td>
-                    <td th:text="${reserva.carro.modelo}"></td>
-                    <td th:text="${reserva.localRetirada}"></td>
-                    <td th:text="${#dates.format(reserva.dataRetirada, 'dd/MM/yyyy')}"></td>
-                    <td th:text="${#dates.format(reserva.dataDevolu, 'dd/MM/yyyy')}"></td>
+                <!-- Itera sobre a lista de carros nunca reservados -->
+                <tr th:each="carro : ${carrosNuncaReservados}">
+                    <td th:text="${carro.idCarro}"></td>
+                    <td th:text="${carro.modelo}"></td>
+                    <td th:text="${carro.placa}"></td>
+                    <td th:text="${carro.ano}"></td>
+                    <td th:text="${carro.cor}"></td>
+                    <td th:text="${carro.disponivel ? 'Sim' : 'Não'}"></td>
                 </tr>
             </tbody>
         </table>
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"
-        integrity="sha384-JnIyOFHVNQczgqnMObH7F1TweFj+YgjbC8a//YVWOQj3nxlJ90YxjTlA/8ZAxYaN"
-        crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
-        integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em"
-        crossorigin="anonymous"></script>
 </body>
 
 </html>

@@ -1,5 +1,12 @@
 package webapp.locadoracarros.Controller;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -10,6 +17,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import webapp.locadoracarros.Model.Clientes;
 import webapp.locadoracarros.Model.Carros;
@@ -17,6 +25,8 @@ import webapp.locadoracarros.Model.Reservas;
 import webapp.locadoracarros.Repository.ClientesRepository;
 import webapp.locadoracarros.Repository.CarrosRepository;
 import webapp.locadoracarros.Repository.ReservasRepository;
+import webapp.locadoracarros.Repository.HistoricoRepository;
+import webapp.locadoracarros.Model.Historico; // Importe necessário para o histórico
 
 @Controller
 public class ReservasController {
@@ -24,12 +34,14 @@ public class ReservasController {
     private final ReservasRepository reservasRepository;
     private final ClientesRepository clientesRepository;
     private final CarrosRepository carrosRepository;
+    private final HistoricoRepository historicoRepository; // Adicionando o histórico repository
 
     public ReservasController(ReservasRepository reservasRepository, ClientesRepository clientesRepository,
-            CarrosRepository carrosRepository) {
+            CarrosRepository carrosRepository, HistoricoRepository historicoRepository) {
         this.reservasRepository = reservasRepository;
         this.clientesRepository = clientesRepository;
         this.carrosRepository = carrosRepository;
+        this.historicoRepository = historicoRepository; // Inicializando o histórico repository
     }
 
     @PostMapping("/reservar-carro")
@@ -50,6 +62,15 @@ public class ReservasController {
         reserva.setDataDevolu(dataDevolu);
         carro.setDisponivel(false);
         reservasRepository.save(reserva);
+
+        // Criando e salvando o histórico com os mesmos dados da reserva
+        Historico historico = new Historico();
+        historico.setCliente(cliente);
+        historico.setCarro(carro);
+        historico.setLocalRetirada(localRetirada);
+        historico.setDataRetirada(dataRetirada);
+        historico.setDataDevolu(dataDevolu);
+        historicoRepository.save(historico);
 
         return "index";
     }
@@ -135,4 +156,61 @@ public class ReservasController {
         return "internas/lista-reservas-data-cliente";
     }
 
+    @GetMapping("/carros-nunca-reservados")
+    public String carrosNuncaReservados(Model model) {
+        // Busca todos os carros cadastrados
+        List<Carros> carrosCadastrados = (List<Carros>) carrosRepository.findAll();
+
+        // Busca os carros que nunca foram reservados
+        List<Carros> carrosNuncaReservados = new ArrayList<>();
+        for (Carros carro : carrosCadastrados) {
+            // Verifica se há reservas para o carro na tabela de histórico
+            List<Historico> historicoCarro = historicoRepository.findByCarro(carro);
+            if (historicoCarro.isEmpty()) {
+                carrosNuncaReservados.add(carro);
+            }
+        }
+
+        model.addAttribute("carrosNuncaReservados", carrosNuncaReservados);
+
+        return "internas/carros-nunca-reservados";
+    }
+
+    @GetMapping("/receita-data")
+    public String receitaData() {
+        return "internas/receita-data";
+    }
+    
+
+    @GetMapping("/calcular-receita")
+    @ResponseBody
+    public String calcularReceita(
+            @RequestParam("dataInicial") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
+            @RequestParam("dataFinal") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal) {
+
+        if (dataInicial == null || dataFinal == null || dataFinal.isBefore(dataInicial)) {
+            return "0";
+        }
+
+        LocalDateTime dataInicio = dataInicial.atStartOfDay();
+        LocalDateTime dataFim = dataFinal.atTime(LocalTime.MAX); // Use o final do dia da dataFinal
+
+        List<Historico> historicoList = historicoRepository.findByDataRetiradaBetween(dataInicio, dataFim);
+
+        BigDecimal receitaTotal = BigDecimal.ZERO;
+
+        for (Historico historico : historicoList) {
+            LocalDate dataRetirada = historico.getDataRetirada().toInstant().atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+            LocalDate dataDevolu = historico.getDataDevolu().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+            long diasAluguel = ChronoUnit.DAYS.between(dataRetirada, dataDevolu) + 1;
+
+            BigDecimal receitaHistorico = BigDecimal.valueOf(diasAluguel * 40);
+
+            receitaTotal = receitaTotal.add(receitaHistorico);
+        }
+
+        return receitaTotal.toString();
+    }
 }

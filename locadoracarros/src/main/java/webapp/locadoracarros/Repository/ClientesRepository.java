@@ -14,4 +14,5 @@ public interface ClientesRepository extends CrudRepository<Clientes, Long> {
 
     @Query("SELECT r.cliente.idCliente, COUNT(r.cliente.idCliente) as count FROM Reservas r GROUP BY r.cliente.idCliente ORDER BY count DESC")
     List<Object[]> findClienteComMaisAlugueis();
+
 }

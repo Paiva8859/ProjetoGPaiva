@@ -1,7 +1,6 @@
 package webapp.locadoracarros.Controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Controller;
 import webapp.locadoracarros.Model.Clientes;
@@ -64,22 +63,26 @@ public class ClientesController {
         return "internas/lista-clientes";
     }
 
-    // @GetMapping("/clientes-frequentes")
-    // public String clientesFrequentes(Model model) {
-    //     List<Clientes> clientesComMaisDeUmAluguel = clientesRepository.findClientesComMaisDeUmAluguel();
-    //     List<Clientes> clientesComMaisAlugueis = clientesRepository.findClienteComMaisAlugueis();
+    @GetMapping("/clientes-frequentes")
+public String clientesFrequentes(Model model) {
+    List<Clientes> clientesComMaisDeUmAluguel = clientesRepository.findClientesComMaisDeUmAluguel();
+    List<Object[]> clientesComMaisAlugueis = clientesRepository.findClienteComMaisAlugueis();
 
-    //     model.addAttribute("clientesComMaisDeUmAluguel", clientesComMaisDeUmAluguel);
+    model.addAttribute("clientesComMaisDeUmAluguel", clientesComMaisDeUmAluguel);
 
-    //     if (!clientesComMaisAlugueis.isEmpty()) {
-    //         Clientes clienteComMaisAlugueis = clientesComMaisAlugueis.get(0);
-    //         model.addAttribute("clienteComMaisAlugueis", clienteComMaisAlugueis);
-    //         model.addAttribute("clienteMaisAlugouCount", clientesRepository.countByCliente(clienteComMaisAlugueis));
-    //     } else {
-    //         model.addAttribute("clienteComMaisAlugueis", null);
-    //         model.addAttribute("clienteMaisAlugouCount", 0);
-    //     }
+    if (!clientesComMaisAlugueis.isEmpty()) {
+        Object[] clienteMaisAlugueis = clientesComMaisAlugueis.get(0); // Pega o primeiro array/tupla
+        Long clienteId = (Long) clienteMaisAlugueis[0]; // Obtém o ID do cliente
+        Clientes cliente = clientesRepository.findById(clienteId).orElse(null); // Busca o cliente pelo ID
 
-    //     return "internas/clientes-frequentes";
-    // }
+        model.addAttribute("clienteComMaisAlugueis", cliente);
+        model.addAttribute("clienteMaisAlugouCount", clienteMaisAlugueis[1]); // Contagem de aluguéis
+    } else {
+        model.addAttribute("clienteComMaisAlugueis", null);
+        model.addAttribute("clienteMaisAlugouCount", 0);
+    }
+
+    return "internas/clientes-frequentes";
+}
+
 }
